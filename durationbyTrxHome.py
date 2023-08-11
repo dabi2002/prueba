@@ -6,9 +6,10 @@ from pathlib import Path
 import logging
 
 def setup_logging():
-    logging.basicConfig(filename='/Users/colombia-01/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/result/logDurationHome.log',
-                        level=logging.INFO,
+
+    logging.basicConfig(filename='/app/logs/logDurationHome.log', level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
+
     logging.info('--- Starting script ---')
 
 def process_log_line(line):
@@ -168,10 +169,10 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/colombia-01/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/SCL", "Limsp_act_*.log")
+process_log_files("/app/data", "Limsp_act_*.log")
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
 # Save the DataFrame to a CSV file
-all_transactions_df.to_csv("/Users/colombia-01/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/result/resultallNodes1.1.csv")
+all_transactions_df.to_csv("/app/output/resultallNodes1.1.csv")
 logging.info('Resultado almacenado')

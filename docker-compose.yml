@@ -1,0 +1,9 @@
+version: '3'
+services:
+  myapp:
+    build: .
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./output:/app/output
+      - ./data:/app/data
