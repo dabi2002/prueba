@@ -12,8 +12,7 @@ RUN pip install pandas
 
 
 # Copiar los scripts al contenedor
-COPY durationbyTrxHome.py .
-COPY consolidate.py .
+COPY start.sh .
+RUN chmod +x start.sh
 
-# Entrypoint para ejecutar los scripts en orden
-ENTRYPOINT ["sh", "-c", "python durationbyTrxHome.py && consolidate.py"]
+ENTRYPOINT ["./start.sh"]

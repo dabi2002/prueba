@@ -6,4 +6,5 @@ services:
       - ./config:/app/config
       - ./logs:/app/logs
       - ./output:/app/output
-      - ./data:/app/data
+      - /Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/SCL:/app/data
+      - ./app:/app/source
