@@ -4,7 +4,7 @@ import logging
 import os
 
 def setup_logging():
-    logging.basicConfig(filename='/app/logs/consolidation.log',
+    logging.basicConfig(filename='../logs/consolidation.log',
                         level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info('--- Starting script ---')
@@ -100,8 +100,8 @@ if __name__ == "__main__":
     # Inicializa el contador
     get_first_last_dates.count = 0
     
-    input_file_path = "/app/output/resultallNodes.csv"
-    output_file_path = "/app/output/consolidated_results.csv"
+    input_file_path = "../output/resultallNodes.csv"
+    output_file_path = "../output/consolidated_results.csv"
     if not os.path.exists(input_file_path):
         logging.error(f"El archivo {input_file_path} no existe. Terminando la ejecución.")
         exit(1)
