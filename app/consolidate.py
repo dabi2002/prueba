@@ -42,12 +42,13 @@ def get_first_last_dates(group):
         last_action = last_action_row['last_action']
         last_subcomponent = last_action_row['last_subcomponent']
         
+    """
     elif 'REJECTED' in group['last_action'].values:
         last_action_row = group[group['last_action'] == 'REJECTED'].iloc[-1]
         last_date = last_action_row['date_max']
         last_action = last_action_row['last_action']
         last_subcomponent = last_action_row['last_subcomponent']
-      
+    """
 
     duration = (last_date - first_date).seconds
     
@@ -100,8 +101,8 @@ if __name__ == "__main__":
     # Inicializa el contador
     get_first_last_dates.count = 0
     
-    input_file_path = "../output/resultallNodes.csv"
-    output_file_path = "../output/consolidated_results.csv"
+    input_file_path = "../output/resultCtrlbrrAll.csv"
+    output_file_path = "../output/consolidated_resultsCtrl.csv"
     if not os.path.exists(input_file_path):
         logging.error(f"El archivo {input_file_path} no existe. Terminando la ejecución.")
         exit(1)

@@ -122,7 +122,7 @@ def process_log_file(file_path):
                 transaction['priority'] = priority
 
             # Update SEND status
-            if action in ['SEND','REJECTED']:
+            if action in ['SEND']:  
                 transaction['send'] = True
 
     # Convert the dictionary to a DataFrame
@@ -176,10 +176,10 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/AisladoPrueba", "brrAct.log")
+process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/AisladoPrueba", "brrAct2.log")
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
 # Save the DataFrame to a CSV file
-all_transactions_df.to_csv("../output/resultCtrlbrr.csv")
+all_transactions_df.to_csv("../output/resultCtrlbrr2.csv")
 logging.info('Resultado almacenado')
