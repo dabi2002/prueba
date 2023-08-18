@@ -8,7 +8,7 @@ import logging
 
 def setup_logging():
 
-    logging.basicConfig(filename='../logs/logDuration.log', level=logging.INFO,
+    logging.basicConfig(filename='/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/logs/logDurationBCI.log', level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     logging.info('--- Starting script ---')
@@ -18,8 +18,12 @@ def process_log_line(line):
     This function processes a log line and extracts relevant details.
     """
     # Regular expression for parsing the log line
-    pattern = r"\[(?P<timestamp>.+?)\]\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
-    
+    #pattern = r"\[(?P<timestamp>.+?)\]\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+    #pattern = r"(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+    pattern = r"(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3})?)\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+
+   
+   
     # Regular expression for finding transaction ID and priority
     #transaction_pattern = r"transaction:([^ ]*)"
     transaction_pattern = r"(transaction:|event:)([^ ]*)"
@@ -45,9 +49,17 @@ def process_log_line(line):
             details['priority'] = int(priority_match.group(1))
         else:
             details['priority'] = -1
+            
+        
+        if '.' in details['timestamp']:
+            # Format with milliseconds
+            details['timestamp'] = datetime.strptime(details['timestamp'], "%Y/%m/%d %H:%M:%S.%f")
+        else:
+            # Format without milliseconds
+            details['timestamp'] = datetime.strptime(details['timestamp'], "%Y/%m/%d %H:%M:%S")
         
         # Convert timestamp to datetime object
-        details['timestamp'] = datetime.strptime(details['timestamp'], "%Y/%m/%d %H:%M:%S")
+        # details['timestamp'] = datetime.strptime(details['timestamp'], "%Y/%m/%d %H:%M:%S")
         
         return details
 
@@ -70,7 +82,15 @@ def process_log_file(file_path):
     valid_log_data = [data for data in log_data if data is not None]
 
     # Convert the list to a pandas DataFrame
+    #df = pd.DataFrame(log_data)
     df = pd.DataFrame(valid_log_data)
+    if df.empty:
+        # Print the file name
+        print(os.path.basename(file_path))
+        print("The DataFrame is empty.")
+    
+    #print(df.columns)
+    #print(df.head())
 
     # Drop rows without transaction_id
     df = df.dropna(subset=['transaction_id'])
@@ -170,7 +190,7 @@ def process_log_files(directory_path, file_pattern):
         # Process the log file
         process_log_file(file_path)
         count+=1
-        if count % 10 == 0:
+        if count % 5 == 0:
             logging.info(f'Ha terminado de procesar {count} archivos...')
         
 
@@ -180,10 +200,12 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/AisladoPrueba", "fff.log")
+process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/BCI/2023-08-17 01 L01/", "*act*.log")
+#process_log_files("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/brrMac/AisladoPrueba", "testoffice.log")
+
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
 # Save the DataFrame to a CSV file
-all_transactions_df.to_csv("../output/resultCtrlbrr2.csv")
+all_transactions_df.to_csv("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/resultnodestBCI.csv")
 logging.info('Resultado almacenado')

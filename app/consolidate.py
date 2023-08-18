@@ -4,7 +4,7 @@ import logging
 import os
 
 def setup_logging():
-    logging.basicConfig(filename='../logs/consolidation.log',
+    logging.basicConfig(filename='/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/logs/consolidationBCI.log',
                         level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info('--- Starting script ---')
@@ -54,7 +54,7 @@ def get_first_last_dates(group):
     
     get_first_last_dates.count += 1
     
-    # Si el contador es múltiplo de 5000, escribe en el log
+    # Si el contador es múltiplo de 50000, escribe en el log
     if get_first_last_dates.count % 50000 == 0:
         logging.info(f'Ha terminado de procesar {get_first_last_dates.count} transacciones...')  
         
@@ -74,8 +74,12 @@ def process_csv(input_file, output_file):
     logging.info('Starting processing...')
     data = pd.read_csv(input_file)
     logging.info(f'Finished reading input file: {input_file}')
-    data['date_min'] = pd.to_datetime(data['date_min'])
-    data['date_max'] = pd.to_datetime(data['date_max'])
+    #data['date_min'] = pd.to_datetime(data['date_min'])
+    #data['date_max'] = pd.to_datetime(data['date_max'])
+    
+    data['date_min'] = pd.to_datetime(data['date_min'], format='mixed')
+    data['date_max'] = pd.to_datetime(data['date_max'], format='mixed')
+
     
 
     data_sorted = data.sort_values(by=['Transaction ID', 'date_min'])
@@ -101,8 +105,8 @@ if __name__ == "__main__":
     # Inicializa el contador
     get_first_last_dates.count = 0
     
-    input_file_path = "../output/resultCtrlbrrAll.csv"
-    output_file_path = "../output/consolidated_resultsCtrl.csv"
+    input_file_path = "/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/resultnodestBCI.csv"
+    output_file_path = "/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/consolidatedBCI.csv"
     if not os.path.exists(input_file_path):
         logging.error(f"El archivo {input_file_path} no existe. Terminando la ejecución.")
         exit(1)
