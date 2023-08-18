@@ -21,7 +21,8 @@ def process_log_line(line):
     pattern = r"\[(?P<timestamp>.+?)\]\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
     
     # Regular expression for finding transaction ID and priority
-    transaction_pattern = r"transaction:([^ ]*)"
+    #transaction_pattern = r"transaction:([^ ]*)"
+    transaction_pattern = r"(transaction:|event:)([^ ]*)"
     priority_pattern = r"pri:(\d+)"
     
     # Parse the log line
@@ -34,7 +35,7 @@ def process_log_line(line):
         # Find transaction ID if present
         transaction_match = re.search(transaction_pattern, details['details'])
         if transaction_match:
-            details['transaction_id'] = transaction_match.group(1)
+            details['transaction_id'] = transaction_match.group(2)
         else:
             details['transaction_id'] = None
         
@@ -63,10 +64,13 @@ def process_log_file(file_path):
         log_lines = file.readlines()
 
     # Process each log line and store the results in a list
-    log_data = [process_log_line(line) for line in log_lines if process_log_line(line) is not None]
+    #log_data = [process_log_line(line) for line in log_lines if process_log_line(line) is not None]
+    log_data = [process_log_line(line) for line in log_lines]
+    
+    valid_log_data = [data for data in log_data if data is not None]
 
     # Convert the list to a pandas DataFrame
-    df = pd.DataFrame(log_data)
+    df = pd.DataFrame(valid_log_data)
 
     # Drop rows without transaction_id
     df = df.dropna(subset=['transaction_id'])
@@ -176,7 +180,7 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/AisladoPrueba", "brrAct2.log")
+process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/AisladoPrueba", "fff.log")
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
