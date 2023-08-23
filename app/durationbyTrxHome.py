@@ -20,7 +20,17 @@ def process_log_line(line):
     # Regular expression for parsing the log line
     #pattern = r"\[(?P<timestamp>.+?)\]\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
     #pattern = r"(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
-    pattern = r"(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3})?)\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+    ########################################################################################################################################################
+    pattern = r"\[(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3})?)\]\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+    #[2021/12/15 23:12:16] TOREGISTER ServiceCenterOu transaction:ULr/+jE3vcAZNPFumuwl7s+X
+    #[2021/12/15 23:12:16] OUT        ServiceCenterOu transaction:ULr/+jE3vcAZNPFumuwl7s+X pri:4
+    ########################################################################################################################################################
+    
+    #pattern = r"(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3})?)\s+(?P<action>.+?)\s+(?P<subcomponent>.+?)\s+(?P<details>.+)"
+    #2023/08/15 21:57:56 OUT        EventManager    event:UMbw23DMS0kIqe41BxllezcS
+    #2023/08/15 21:57:56 IN         WsSerInAdpAuth  transaction:UMbw23SQkLxRJu41Bxktkxuo
+    #2023/08/15 21:57:56 NEWTRANS   WsSerInAdpAuth  transaction:UMbw23SQkLxRJu41Bxktkxuo message:1692151076605
+    ########################################################################################################################################################   
 
    
    
@@ -79,17 +89,18 @@ def process_log_file(file_path):
     #log_data = [process_log_line(line) for line in log_lines if process_log_line(line) is not None]
     log_data = [process_log_line(line) for line in log_lines]
     
+    
+    
     valid_log_data = [data for data in log_data if data is not None]
 
     # Convert the list to a pandas DataFrame
     #df = pd.DataFrame(log_data)
     df = pd.DataFrame(valid_log_data)
     if df.empty:
-        # Print the file name
-        print(os.path.basename(file_path))
-        print("The DataFrame is empty.")
+        print("El DataFrame está vacío!")
+        print (log_data)
+        exit()
     
-    #print(df.columns)
     #print(df.head())
 
     # Drop rows without transaction_id
@@ -97,6 +108,7 @@ def process_log_file(file_path):
 
     # Sort DataFrame by timestamp
     df = df.sort_values('timestamp')
+  
 
     # Define a dictionary to store transaction details
     transactions = {}
@@ -109,6 +121,8 @@ def process_log_file(file_path):
         action = row['action']
         subcomponent = row['subcomponent']
         priority = row['priority']
+        
+        
 
         # Update transaction details
         if transaction_id not in transactions:
@@ -121,16 +135,18 @@ def process_log_file(file_path):
                 'last_action': action,
                 'first_subcomponent': subcomponent,
                 'last_subcomponent': subcomponent,
-                'send': False,  # Whether the SEND action has been encountered
+                'send': False if action != 'SEND' else True,  # Whether the SEND action has been encountered
                 'newtrans': False  # Whether the NEWTRANS or MNEWTRANS action has been encountered
             }
         else:
             # If the transaction is in the dictionary, update it
             transaction = transactions[transaction_id]
+            #print (f"Transaction: {transaction_id}, action: {action}")
 
             # Update date_min, first_action, and first_subcomponent if NEWTRANS or MNEWTRANS is encountered
             if action in ['NEWTRANS', 'MNEWTRANS']:
                 transaction['date_min'] = timestamp
+                transaction['first_action'] = action
                 transaction['first_action'] = action
                 transaction['first_subcomponent'] = subcomponent
                 transaction['newtrans'] = True
@@ -200,12 +216,12 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/BCI/2023-08-17 01 L01/", "*act*.log")
+process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/SCL/Nodo1", "Limsp_act_16.log")
 #process_log_files("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/brrMac/AisladoPrueba", "testoffice.log")
 
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
 # Save the DataFrame to a CSV file
-all_transactions_df.to_csv("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/resultallNodes_Rejected.csv")
+all_transactions_df.to_csv("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/result_SCL.csv")
 logging.info('Resultado almacenado')
