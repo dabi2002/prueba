@@ -4,11 +4,11 @@ import re
 from datetime import datetime
 from pathlib import Path
 import logging
-
+import time
 
 def setup_logging():
 
-    logging.basicConfig(filename='/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/logs/logDurationBCI.log', level=logging.INFO,
+    logging.basicConfig(filename='/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/logs/logDuration.log', level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     logging.info('--- Starting script ---')
@@ -82,9 +82,20 @@ def process_log_file(file_path):
     global all_transactions_df
 
     # Read the log file
+    start_time = time.time()  # Registra el tiempo de inicio
     with open(file_path, 'r') as file:
         log_lines = file.readlines()
-
+    end_time = time.time()  # Registra el tiempo de finalización
+    
+    # Calcula la velocidad de lectura en MB por segundo
+    file_size_mb = len(''.join(log_lines)) / (1024 * 1024)  # Tamaño del archivo en MB
+    read_speed_mb_per_sec = file_size_mb / (end_time - start_time)
+    
+    # Registra la velocidad de lectura en el archivo de registro o donde desees
+    #print(f"File: {file_path}, Read Speed (MB/s): {read_speed_mb_per_sec}\n")
+    with open('./logs/read_speed.log', 'a') as log_file:
+        log_file.write(f"File: {file_path}, Read Speed (MB/s): {read_speed_mb_per_sec}\n")
+       
     # Process each log line and store the results in a list
     #log_data = [process_log_line(line) for line in log_lines if process_log_line(line) is not None]
     log_data = [process_log_line(line) for line in log_lines]
@@ -216,12 +227,12 @@ all_transactions_df = pd.DataFrame()
 
 # Process all log files in the given directory and its subdirectories that match the given pattern
 # Call the function with your directory path and file pattern
-process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/BCI/2023-08-17 01 L01/nodo2", "Limsp_act_30.log")
+process_log_files("/Users/jimmy/Data/OneDrive - Latinia Interactive Business, S.A/Jimmy/brrMac/BCI/2023-08-17 01 L01/", "*.log")
 #process_log_files("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/brrMac/AisladoPrueba", "testoffice.log")
 
 logging.info('Processing completed...')
 
 logging.info('Guardando resultado...')
 # Save the DataFrame to a CSV file
-all_transactions_df.to_csv("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/result_BCI_firstRejected.csv")
+all_transactions_df.to_csv("/Users/jimmy/Library/CloudStorage/OneDrive-LatiniaInteractiveBusiness,S.A/Jimmy/utiles/Python/piase/output/result_BCI_2908.csv")
 logging.info('Resultado almacenado')
