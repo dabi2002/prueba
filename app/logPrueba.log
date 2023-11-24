@@ -1,0 +1,22 @@
+2023-10-26 11:34:59,723 - INFO - --- Starting script ---
+2023-10-26 11:34:59,723 - INFO - Starting processing...
+2023-10-26 11:34:59,732 - INFO - Sorting done, blockID: 1
+2023-10-26 11:34:59,738 - INFO - Groupby done. blockID: 1
+2023-10-26 11:34:59,743 - INFO - Sorting done, blockID: 2
+2023-10-26 11:34:59,743 - INFO - Groupby done. blockID: 2
+2023-10-26 11:34:59,743 - INFO - Finished reading input file: input.csv
+2023-10-26 11:34:59,743 - INFO - Processing completed.
+2023-10-26 11:34:59,743 - INFO - --- Script finished ---
+2023-10-26 11:35:19,128 - INFO - --- Starting script ---
+2023-10-26 11:35:19,129 - ERROR - El archivo C:\Users\Usuario\OneDrive - Latinia Interactive Business, S.A\INT DPTO\JP_Python\piase\app\input.csv no existe. Terminando la ejecución.
+2023-10-26 11:35:33,612 - INFO - --- Starting script ---
+2023-10-26 11:35:33,612 - ERROR - El archivo C:\Users\Usuario\OneDrive - Latinia Interactive Business, S.A\INT DPTO\JP_Python\piase\app\input.csv no existe. Terminando la ejecución.
+2023-10-26 11:36:06,212 - INFO - --- Starting script ---
+2023-10-26 11:36:06,212 - INFO - Starting processing...
+2023-10-26 11:36:06,220 - INFO - Sorting done, blockID: 1
+2023-10-26 11:36:06,225 - INFO - Groupby done. blockID: 1
+2023-10-26 11:36:06,230 - INFO - Sorting done, blockID: 2
+2023-10-26 11:36:06,232 - INFO - Groupby done. blockID: 2
+2023-10-26 11:36:06,232 - INFO - Finished reading input file: input.csv
+2023-10-26 11:36:06,232 - INFO - Processing completed.
+2023-10-26 11:36:06,232 - INFO - --- Script finished ---
